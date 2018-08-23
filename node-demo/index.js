@@ -24,25 +24,37 @@ var server = http.createServer(function(request, response){
 
 
   console.log('HTTP的路径为\n' + path)
-  if(path == '/style'){
-    response.setHeader('Content-Type','text/css;charset=utf-8')
-    response.write('body{background-color:blue}h1{color:red}')
-    response.end()
-  }else if(path == '/script'){
-    response.setHeader('Content-Type','text/javascript;charset=utf-8')
-    response.write('alert("this is js run")')
-    response.end()
-  }else if(path == '/index'){
+  if(path === '/'){
+    var string = fs.readFileSync('./index.html','utf8')
+    var amount = fs.readFileSync('./db','utf8') //100
+    string = string.replace('&&amount&&',amount)
     response.setHeader('Content-Type','text/html;charset=utf-8')
-    response.write('<DOCTYPE>\n<html>' + 
-    '<head><link rel = "stylesheet" href = "/style">' +
-    '</head><body>' + 
-    '<h1>你好</h1>' +
-    '<script src = "/script"></script>'
-    )
+    response.write(string)
+    response.end()
+  }else if(path == '/style.css'){
+    var string = fs.readFileSync('./style.css','utf8')
+    response.setHeader('Content-Type','text/css')
+    response.write(string)
+    response.end()
+  }else if(path == '/main.js'){
+    var string = fs.readFileSync('./main.js','utf8')
+    response.setHeader('Content-Type','application/javascript')
+    response.write(string)
+    response.end()
+  }else if(path == '/pay' && method.toUpperCase() == 'POST'){
+    var amount = fs.readFileSync('./db','utf8')
+    var newAmount = amount - 1
+    if(Math.random() > 0.5){
+      fs.writeFileSync('./db',newAmount)
+      response.write('success')
+    }else{
+      response.write('fail')
+    }
     response.end()
   }else{
     response.statusCode = 404
+    response.setHeader('Content-Type','text/html;charset=utf-8')
+    response.write('找不到对应的路径，你需要修改index.js')
     response.end()
   }
   
