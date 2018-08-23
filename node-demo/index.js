@@ -46,7 +46,7 @@ var server = http.createServer(function(request, response){
     var newAmount = amount - 1
     fs.writeFileSync('./db',newAmount)
     response.setHeader('Content-Type','application/javascrpit')
-    response.write('`amount.innerText = amount.innerText - 1`')
+    response.write(`amount.innerText = amount.innerText - 1`)   //局部刷新
     response.end()
   }else{
     response.statusCode = 404

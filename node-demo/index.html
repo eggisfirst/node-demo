@@ -16,18 +16,12 @@
       let script = document.createElement('script')
       script.src = '/pay'
       document.body.appendChild(script)
-      script.onload = function(){
-        
-        amount.innerText = amount.innerText - 1
+      script.onload = function(e){
+        e.currentTarget.remove()
       }
-      script.onerror = function(){
-        
-      }
-
-
-
-
-
+      script.onerror = function(e){
+        e.currentTarget.remove()
+      }  //服务器返回的JavaScript
 
       // let image = document.createElement('img')
       // image.src = '/pay'
