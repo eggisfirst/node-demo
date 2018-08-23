@@ -41,13 +41,16 @@ var server = http.createServer(function(request, response){
     response.setHeader('Content-Type','application/javascript')
     response.write(string)
     response.end()
-  }else if(path == '/pay' && method.toUpperCase() == 'POST'){
+  }else if(path == '/pay'){
     var amount = fs.readFileSync('./db','utf8')
     var newAmount = amount - 1
     if(Math.random() > 0.5){
       fs.writeFileSync('./db',newAmount)
-      response.write('success')
+      response.setHeader('Content-Type','image/png')
+      response.statusCode = 200
+      response.write(fs.readFileSync('./dog.png'))
     }else{
+      response.statusCode = 400
       response.write('fail')
     }
     response.end()
