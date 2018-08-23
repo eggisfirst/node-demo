@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+ 
   <title>Document</title>
 </head>
 <body>
@@ -13,20 +14,48 @@
   
 
   <script>
-    window.xxx = function(result){
-      alert('这是xiaowei写的前端代码')
-      alert(`我得到的结果是${result}`)
-    }
+    // window.xxx = function(result){
+     
+    //   // alert('这是xiaowei写的前端代码')
+    //   // alert(`我得到的结果是${result}`)
+    // }
     button.addEventListener('click',(e)=>{
-      let script = document.createElement('script')
-      script.src = 'http://xiaoming.com:8001/pay?callbackName=xxx'
-      document.body.appendChild(script)
-      script.onload = function(e){
-        e.currentTarget.remove()
-      }
-      script.onerror = function(e){
-        e.currentTarget.remove()
-      }  //服务器返回的JavaScript
+      $.ajax({
+        url:"http://xiaoming.com:8001/pay",
+        dataType: "jsonp",
+        success: function(response){
+          if(response === 'success'){
+            amount.innerText = amount.innerText - 1
+          }
+        }
+      })
+
+
+
+
+      // let script = document.createElement('script')
+      // let functionName = 'chen' + parseInt(Math.random()*10000,10)
+      // window[functionName] = function(result){
+      //   if(result === 'success'){
+      //   amount.innerText = amount.innerText - 1
+      // }
+      // }
+      // script.src = 'http://xiaoming.com:8001/pay?callback=' + functionName
+      // document.body.appendChild(script)
+      // script.onload = function(e){
+      //   e.currentTarget.remove()
+      //   delete window[functionName]
+      // }
+      // script.onerror = function(e){
+      //   e.currentTarget.remove()
+      //   delete window[functionName]
+
+
+
+
+
+
+      // }  //服务器返回的JavaScript
 
       // let image = document.createElement('img')
       // image.src = '/pay'
@@ -39,7 +68,7 @@
       // }
     })
   </script>
-
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   </body>
 
 

@@ -10,11 +10,11 @@ if(!port){
 
 var server = http.createServer(function(request, response){
   var parsedUrl = url.parse(request.url, true)
-  var path = request.url 
-  var query = ''
-  if(path.indexOf('?') >= 0){ query = path.substring(path.indexOf('?')) }
-  var pathNoQuery = parsedUrl.pathname
-  var queryObject = parsedUrl.query
+  var pathWithQuery = request.url 
+  var queryString = ''
+  if(pathWithQuery.indexOf('?') >= 0){ queryString = pathWithQuery.substring(pathWithQuery.indexOf('?')) }
+  var path = parsedUrl.pathname
+  var query = parsedUrl.query
   var method = request.method
 
   /******** 从这里开始看，上面不要看 ************/
@@ -23,7 +23,7 @@ var server = http.createServer(function(request, response){
 
 
 
-  console.log('HTTP的路径为\n' + path)
+  console.log('方方说：含查询字符串的路径\n' + pathWithQuery)
   if(path === '/'){
     var string = fs.readFileSync('./index.html','utf8')
     var amount = fs.readFileSync('./db','utf8') //100
@@ -41,14 +41,15 @@ var server = http.createServer(function(request, response){
     response.setHeader('Content-Type','application/javascript')
     response.write(string)
     response.end()
-  }else if(path === '/pay'){
+  }else if (path === '/pay') {
     var amount = fs.readFileSync('./db','utf8')
     var newAmount = amount - 1
-    fs.writeFileSync('./db',newAmount)
-    response.setHeader('Content-Type','application/javascrpit')
+    fs.writeFileSync('./db', newAmount)
+    response.setHeader('Content-Type', 'application/javascript')
+    response.statusCode = 200
     response.write(`
-    ${query.callbackName}.call(undefined,'success')
-    `)   //局部刷新
+        ${query.callback}.call(undefined,'success')
+    `)
     response.end()
   }else{
     response.statusCode = 404
