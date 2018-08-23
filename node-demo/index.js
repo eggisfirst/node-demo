@@ -31,28 +31,22 @@ var server = http.createServer(function(request, response){
     response.setHeader('Content-Type','text/html;charset=utf-8')
     response.write(string)
     response.end()
-  }else if(path == '/style.css'){
+  }else if(path === '/style.css'){
     var string = fs.readFileSync('./style.css','utf8')
     response.setHeader('Content-Type','text/css')
     response.write(string)
     response.end()
-  }else if(path == '/main.js'){
+  }else if(path === '/main.js'){
     var string = fs.readFileSync('./main.js','utf8')
     response.setHeader('Content-Type','application/javascript')
     response.write(string)
     response.end()
-  }else if(path == '/pay'){
+  }else if(path === '/pay'){
     var amount = fs.readFileSync('./db','utf8')
     var newAmount = amount - 1
-    if(Math.random() > 0.5){
-      fs.writeFileSync('./db',newAmount)
-      response.setHeader('Content-Type','application/javascrpit')
-      response.statusCode = 200
-      response.write('')
-    }else{
-      response.statusCode = 400
-      response.write('fail')
-    }
+    fs.writeFileSync('./db',newAmount)
+    response.setHeader('Content-Type','application/javascrpit')
+    response.write('`amount.innerText = amount.innerText - 1`')
     response.end()
   }else{
     response.statusCode = 404
