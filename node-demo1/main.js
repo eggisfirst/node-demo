@@ -4,43 +4,28 @@ window.jQuery = function(nodeOrSelector){
   nodes.html = function(){}
   return nodes
 }
-
 window.jQuery.ajax = function(options){
-  // let url = options.url
-  // let method = options.method
-  // let successFn = options.successFn
-  // let body = options.body
-  // let failFn = options.failFn
-  // let headers = options.headers
-  //ES6 析构赋值
-  let {url,method,successFn,failFn,headers,body} = options
-  let request = new XMLHttpRequest()
-  request.open(method,url) //配置request
-  for(let key in headers){              //设置请求头
-    let value = headers[key]
-    request.setRequestHeader(key,value)
-  }
-
-  request.onreadystatechange = ()=>{
-    if(request.readyState === 4){
-      if(request.status >= 200 && request.status < 300){
-        successFn.call(undefined,request.responseText)   //call
-      }else if(request.status >= 400){
-        failFn.call(undefined,request)
+  let {url,method,headers,body} = options         //es6解构赋值
+  return new Promise(function(resolve,reject){    //success,fail
+    let request = new XMLHttpRequest()            //创建对象
+    request.open(method,url)                      //配置request
+    for(let key in headers){                      //设置请求头
+      let value = headers[key]
+      request.setRequestHeader(key,value)
+    }
+    request.onreadystatechange = ()=>{             
+      if(request.readyState === 4){
+        if(request.status >= 200 && request.status < 300){
+          resolve.call(undefined,request.responseText)   //call
+        }else if(request.status >= 400){
+          reject.call(undefined,request)
+        }
       }
     }
-  }
-  request.send(body)
-}
-
-function f1(responseText){
-  console.log(1)
-}
-function f2(responseText){
-  console.log(2)
+    request.send(body)
+  })
 }
 window.$ = window.jQuery
-
 myBtn.addEventListener('click',(e)=>{
   window.jQuery.ajax({
     url : '/xxx',
@@ -49,17 +34,24 @@ myBtn.addEventListener('click',(e)=>{
     headers : {
       "Content-Type" : "x-www-form-urlencoded",
       "chen" : "18"
-    },
-    successFn : (x)=>{    //需要多个函数
-      f1.call(undefined,x)
-      f2.call(undefined,x)
-    },   //callback
-    failFn : (x)=>{console.log(x)}
-  })
+    }
+  }).then(             //利用Promise.then().then() 因为 return promise
+    (text)=>{console.log(text)},
+    (request)=>{console.log(request)}
+  )
 })
 
 
-
+//JQ库的AJAX用法
+// myBtn.addEventListener('click',(e)=>{
+//   $.ajax({
+//     url:'/xxx',
+//     method:'post'
+//   }).then(
+//     (responseText)=>{console.log(responseText)},
+//     (request)=>{console.log('error')}
+//   )   //promise  不用给success和fail起名字
+// })
 
 
 
