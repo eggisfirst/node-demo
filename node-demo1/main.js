@@ -14,6 +14,8 @@ myBtn.addEventListener('click',(e)=>{
         console.log(object)
         console.log(object.note)
         console.log(object.note.from)
+      }else if(request.status >= 400){
+        console.log('请求失败')
       }
     }
   }
